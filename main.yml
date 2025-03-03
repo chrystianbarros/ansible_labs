@@ -13,13 +13,26 @@
         path: ~/.oci/config
       register: st
       when: ansible_facts['os_family'] == "Debian"
+      failed_when: st.stat.exists == false
 
     - name: Windows - Ensure OCI config file exists
       ansible.windows.win_stat:
         path: '%userprofile%\.oci\config'
       register: win_stat
       when: ansible_facts['os_family'] == "Windows"
+      failed_when: st.stat.exists == false
 
     - name: Start compute instance
       ansible.builtin.include_tasks:
-        file: ./oci_actions/tasks/main.yml
+        file: ./oci_actions/tasks/start_instance.yml
+      when: instance_action == 'start'
+
+    - name: Stop compute instance
+      ansible.builtin.include_tasks:
+        file: ./oci_actions/tasks/stop_instance.yml
+      when: stop_instance == 'stop'
+
+    - name: Reset compute instance
+      ansible.builtin.include_tasks:
+        file: ./oci_actions/tasks/reset_instance.yml
+      when: reset_instance == 'reset'
