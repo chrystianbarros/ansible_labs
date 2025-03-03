@@ -1,0 +1,25 @@
+---
+- name: Oracle Cloud Infrastructure - Compute Actions
+  gather_facts: true
+  hosts: localhost
+
+  tasks:
+    - name: Ensure OCI Python SDK is installed
+      ansible.builtin.pip:
+        name: oci
+
+    - name: Linux - Ensure OCI config file exists
+      ansible.builtin.stat:
+        path: ~/.oci/config
+      register: st
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Windows - Ensure OCI config file exists
+      ansible.windows.win_stat:
+        path: '%userprofile%\.oci\config'
+      register: win_stat
+      when: ansible_facts['os_family'] == "Windows"
+
+    - name: Start compute instance
+      ansible.builtin.include_tasks:
+        file: ./oci_actions/tasks/main.yml
