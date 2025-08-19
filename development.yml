@@ -1,0 +1,15 @@
+---
+- name: Setup WSL development workspace
+  hosts: localhost
+  gather_facts: true
+
+  tasks:
+    - name: Include MySQL tasks
+      ansible.builtin.include_role:
+        name: mysql
+        tasks_from: installation.yml
+        apply:
+          tags:
+            - mysql
+      tags:
+        - mysql

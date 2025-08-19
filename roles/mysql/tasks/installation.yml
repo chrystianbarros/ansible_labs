@@ -1,0 +1,15 @@
+---
+# tasks file for mysql
+- name: 'Install MySQL Database and MySQL Shell'
+  ansible.builtin.apt:
+    name:
+      - mysql-server
+      - mysql-shell
+    update_cache: true
+  become: true
+
+- name: 'Ensure the MySQL Server service is started'
+  ansible.builtin.service:
+    name: mysql
+    state: started
+  become: true
